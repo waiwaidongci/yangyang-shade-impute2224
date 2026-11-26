@@ -1,5 +1,6 @@
 """Run the nursery sensor imputation workflow on one validated dataset."""
 
+from .coverage import assess
 from .evaluation import evaluate
 from .fixtures import demo_rows
 from .neighbors import fit_reference
@@ -17,6 +18,7 @@ def analyze(rows, settings):
     holdout = [row for row in rows if row['partition'] == 'holdout']
     pending = [row for row in rows if row['partition'] == 'pending']
     references = fit_reference(training, options['neighbors'])
+    groups = assess(rows, references, options)
     details, scores = evaluate(holdout, references, options)
-    cells = handover(pending, references, options)
-    return assemble(cells, details, scores, references)
+    cells = handover(pending, references, options, groups)
+    return assemble(cells, details, scores, references, groups)

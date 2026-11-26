@@ -1,7 +1,7 @@
 """CSV measurement fields, split names, and operator settings."""
 
 FIELDS = {'temp_c': (-10, 65), 'rh_pct': (0, 100), 'par': (0, 3000)}
-SPLITS = ('train', 'holdout', 'pending')
+SPLITS = ('train', 'calib', 'holdout', 'pending')
 COLUMNS = ['reading_id', 'batch_id', 'partition', 'shade_class', *FIELDS]
 PARAMETERS = [
     {'key': 'neighbors', 'label': '邻居数', 'min': 1, 'max': 25, 'default': 5, 'step': 1},
@@ -13,7 +13,7 @@ SPEC = {
     'dataset_name': '河桥苗圃遮阳台 11 月测次合集',
     'columns': COLUMNS,
     'settings': PARAMETERS,
-    'description': '按遮阳网档位仅使用冻结训练批，比较 KNN 插补与同档中位数。',
+    'description': '按遮阳网档位仅使用冻结训练批，比较 KNN 插补与同档中位数，并对缺测组合给出九成联合区间与独立留出覆盖率。',
     'partitions': list(SPLITS),
     'units': {'temp_c': '°C', 'rh_pct': '%', 'par': 'µmol/m²/s'},
 }

@@ -1,4 +1,4 @@
-"""Validate physical limits and keep complete reference and holdout batches disjoint."""
+"""Validate physical limits and keep complete train, calibration, and holdout batches disjoint."""
 
 import math
 import re
@@ -43,8 +43,8 @@ def normalize_rows(rows):
             raise ValueError(f'读数编号重复 {reading}')
         ids.add(reading)
         features = {key: measurement(raw[key], bounds, f'{reading} {key}') for key, bounds in FIELDS.items()}
-        if split != 'pending' and any(value is None for value in features.values()):
-            raise ValueError(f'{reading} 的训练与留出读数必须齐全')
+        if split in ('train', 'calib', 'holdout') and any(value is None for value in features.values()):
+            raise ValueError(f'{reading} 的训练、校准与留出读数必须齐全')
         accepted.append({'reading_id': reading, 'batch_id': batch, 'partition': split,
                          'shade_class': shade, **features})
     if not accepted:
